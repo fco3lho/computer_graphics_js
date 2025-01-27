@@ -1,0 +1,27 @@
+{
+  "name": "computer_graphics_js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fco3lho/computer_graphics_js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fco3lho/computer_graphics_js/issues"
+  },
+  "homepage": "https://github.com/fco3lho/computer_graphics_js#readme",
+  "dependencies": {
+    "three": "^0.172.0"
+  },
+  "devDependencies": {
+    "vite": "^6.0.11"
+  }
+}
