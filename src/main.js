@@ -153,15 +153,6 @@ carpet.rotation.x = -Math.PI / 2;
 carpet.position.set(2, 0.1, 0); 
 scene.add(carpet);
 
-// Função para criar um quadro simples
-const createFrame = (x, y, z, width, height, texture) => {
-  const frameMaterial = new THREE.MeshBasicMaterial({ map: texture });
-  const frame = new THREE.Mesh(new THREE.PlaneGeometry(width, height), frameMaterial);
-  frame.position.set(x, y, z);
-  frame.rotation.y = Math.PI;  // Rotaciona o quadro para ficar na posição correta na parede
-  scene.add(frame);
-};
-
 
 // Adicionar luz controlável
 const light = new THREE.PointLight(0xffffff, 1, 100);
