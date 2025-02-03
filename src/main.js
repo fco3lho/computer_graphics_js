@@ -155,12 +155,12 @@ scene.add(carpet);
 
 
 // Adicionar luz controlável
-const light = new THREE.PointLight(0xffffff, 1, 100);
+const light = new THREE.PointLight(0xffffff, 1, 500);
 light.castShadow = true; // Ativar sombras para mais realismo
 scene.add(light);
 
 // Adicionar luz ambiente
-const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+const ambientLight = new THREE.AmbientLight(0x404040, 0.1);
 scene.add(ambientLight);
 
 // Configurar a posição da câmera
@@ -189,14 +189,19 @@ window.addEventListener('mousemove', (event) => {
 
   // Usar o Raycaster para calcular a posição no espaço 3D
   raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects([floor, backWall, leftWall]);
+ 
+  const objects = scene.children.filter(obj => obj instanceof THREE.Mesh);
+  const intersects = raycaster.intersectObjects(objects, true);
+
 
   if (intersects.length > 0) {
-    // Posicionar a luz na posição do primeiro objeto intersectado
-    light.position.copy(intersects[0].point);
+    const intersectPoint = intersects[0].point;
+
+    console.log(intersectPoint)
+
+    light.position.copy(intersectPoint).add(new THREE.Vector3(0.1, 0.1, 0.1));
   }
 });
-
 
 
 // Iniciar a animação
