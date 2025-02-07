@@ -7,12 +7,14 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
   75, 
   window.innerWidth / window.innerHeight, 
-  0.1, 
+  1, 
   1000
 );
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Tipo de sombra mais suave
 
 
 // Configurando textura do chão
@@ -85,25 +87,28 @@ encosto.position.set(-1.95, 1, -3.0);
 scene.add(encosto);
 
 // Ajuste das pernas
-const posicao_material_pes = [
-    [-3, 0.25, -2.49], [-2, 0.25, -2.49], 
-    [-3, 0.25, -3.49], [-2, 0.25, -3.49] 
-];
-posicao_material_pes.forEach(pos => {
-    const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.5), material_pes);
-    leg.position.set(...pos);
-    scene.add(leg);
-});
-
 assento.rotation.y = Math.PI / 2; 
 encosto.rotation.y = Math.PI / 2;
 
-posicao_material_pes.forEach((pos, index) => {
-    const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.5), material_pes);
-    leg.position.set(...pos);
-    leg.rotation.y = Math.PI / 2; 
-    scene.add(leg);
-});
+const leg_assento1 = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.5), material_pes);
+leg_assento1.position.set(-3, 0.25, -2.49);
+leg_assento1.rotation.y = Math.PI / 2;
+scene.add(leg_assento1);
+
+const leg_assento2 = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.5), material_pes);
+leg_assento2.position.set(-2, 0.25, -2.49);
+leg_assento2.rotation.y = Math.PI / 2;
+scene.add(leg_assento2);
+
+const leg_assento3 = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.5), material_pes);
+leg_assento3.position.set(-3, 0.25, -3.49);
+leg_assento3.rotation.y = Math.PI / 2;
+scene.add(leg_assento3);
+
+const leg_assento4 = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.5), material_pes);
+leg_assento4.position.set(-2, 0.25, -3.49);
+leg_assento4.rotation.y = Math.PI / 2;
+scene.add(leg_assento4);
 
 // mesa
 const tampa = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.2, 2.5), material_mesa);
@@ -114,11 +119,32 @@ const mesa_material_pes = [
     [-4.7, 0.5, -4], [-3, 0.5, -4],
     [-4.7, 0.5, -2], [-3, 0.5, -2]
 ];
+
 mesa_material_pes.forEach(pos => {
     const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 1), material_pes);
     leg.position.set(...pos);
     scene.add(leg);
 });
+
+const leg_mesa1 = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 1), material_pes);
+leg_mesa1.position.set(-4.7, 0.5, -4);
+leg_mesa1.rotation.y = Math.PI / 2;
+scene.add(leg_mesa1);
+
+const leg_mesa2 = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 1), material_pes);
+leg_mesa2.position.set(-3, 0.5, -4);
+leg_mesa2.rotation.y = Math.PI / 2;
+scene.add(leg_mesa2);
+
+const leg_mesa3 = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 1), material_pes);
+leg_mesa3.position.set(-4.7, 0.5, -2);
+leg_mesa3.rotation.y = Math.PI / 2;
+scene.add(leg_mesa3);
+
+const leg_mesa4 = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 1), material_pes);
+leg_mesa4.position.set(-3, 0.5, -2);
+leg_mesa4.rotation.y = Math.PI / 2;
+scene.add(leg_mesa4);
 
 // PC na mesa
 
@@ -153,14 +179,40 @@ carpet.rotation.x = -Math.PI / 2;
 carpet.position.set(2, 0.1, 0); 
 scene.add(carpet);
 
+//Sombras
+base_cama.castShadow = true;
+colchao.castShadow = true;
+g_roupa.castShadow = true;
+assento.castShadow = true;
+encosto.castShadow = true;
+leg_assento1.castShadow = true
+leg_assento2.castShadow = true
+leg_assento3.castShadow = true
+leg_assento4.castShadow = true
+tampa.castShadow = true;
+leg_mesa1.castShadow = true
+leg_mesa2.castShadow = true
+leg_mesa3.castShadow = true
+leg_mesa4.castShadow = true
+monitorBase.castShadow = true;
+monitorScreen.castShadow = true;
+keyboard.castShadow = true;
+floor.receiveShadow = true;
+backWall.receiveShadow = true;
+leftWall.receiveShadow = true;
+carpet.receiveShadow = true;
 
 // Adicionar luz controlável
-const light = new THREE.PointLight(0xffffff, 1, 500);
-light.castShadow = true; // Ativar sombras para mais realismo
+const light = new THREE.PointLight(0xffffff, 1, 5000);
+light.castShadow = true;
+light.shadow.mapSize.width = 1024;
+light.shadow.mapSize.height = 1024;
+light.shadow.camera.near = 0.5;
+light.shadow.camera.far = 500;
 scene.add(light);
 
 // Adicionar luz ambiente
-const ambientLight = new THREE.AmbientLight(0x404040, 0.1);
+const ambientLight = new THREE.AmbientLight(0x404040, 0.01);
 scene.add(ambientLight);
 
 // Configurar a posição da câmera
@@ -196,13 +248,8 @@ window.addEventListener('mousemove', (event) => {
 
   if (intersects.length > 0) {
     const intersectPoint = intersects[0].point;
-
-    console.log(intersectPoint)
-
     light.position.copy(intersectPoint).add(new THREE.Vector3(0.1, 0.1, 0.1));
   }
 });
 
-
-// Iniciar a animação
 animate();
