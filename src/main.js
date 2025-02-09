@@ -1,6 +1,7 @@
 // Importar os módulos do Three.js
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { createPerson } from './person';
 
 // Configurar a cena, câmera e renderizador
 const scene = new THREE.Scene();
@@ -13,9 +14,9 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 // Carregar texturas
 const textureLoader = new THREE.TextureLoader();
-const floorTexture = textureLoader.load('./textures/piso.jpg');
-const wallTexture = textureLoader.load('./textures/parede.jpg');
-const carpetTexture = textureLoader.load('./textures/tapete.jpg');
+const floorTexture = textureLoader.load('./src/textures/piso.jpg');
+const wallTexture = textureLoader.load('./src/textures/parede.jpg');
+const carpetTexture = textureLoader.load('./src/textures/tapete.jpg');
 wallTexture.wrapS = wallTexture.wrapT = THREE.RepeatWrapping;
 wallTexture.repeat.set(2, 2);
 
@@ -95,6 +96,20 @@ createBox(1.5, 0.1, 0.5, createMaterial(0x000000), -4.4, 1.15, -3).rotation.y = 
 createBox(1.4, 0.8, 0.05, createMaterial(0x555555), -4.4, 1.61, -3).rotation.y = Math.PI / 2; // Tela monitor
 createBox(1.4, 0.05, 0.6, createMaterial(0x2F4F4F), -3.4, 1.1, -3.1).rotation.y = Math.PI / 2; // Teclado
 
+// Criar pessoa e adicionar à cena
+const person = createPerson();
+scene.add(person);
+
+// Animação do movimento da pessoa
+let direction = 2;
+
+function animatePerson() {
+  person.position.z += 0.02 * direction;
+  
+  if (person.position.z > 4) direction = -2;
+  if (person.position.z < -4) direction = 2;
+}
+
 // Adicionar luzes
 const light = new THREE.PointLight(0xffffff, 1, 5000);
 light.castShadow = true;
@@ -126,7 +141,9 @@ window.addEventListener('mousemove', (event) => {
 // Função de animação
 function animate() {
   requestAnimationFrame(animate);
+  animatePerson();
   renderer.render(scene, camera);
   controls.update();
 }
+
 animate();
